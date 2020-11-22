@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const INDEX = 'public/index.html';
 const app = express();
+require('dotenv').config()
 
 const server = express().use((req, res) => res
   .sendFile(INDEX, { root: __dirname }))
