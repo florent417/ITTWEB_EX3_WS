@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 var cors = require('cors')
 const INDEX = 'public/index.html';
 const app = express();
+const HighScoreService = require("./services/highScoreService")
 require('dotenv').config()
 
 const server = express().use((req, res) => res
@@ -18,26 +19,31 @@ const server = express().use((req, res) => res
 const wsServer = new Server({server});
 wsServer.on('connection',
   wsClient =>{
-    wsClient.send('This message was pushed to the ws server');
+    HighScoreService.getHighScore().then((value) =>{
+      console.log("VALUE: " + value);
+      wsServer.clients.forEach((client) => {
+        client.send(JSON.stringify(value));
+      });
+    })
 
     wsClient.onerror = err => console.log(`The server received error: ${err['code']}`);
 
-    wsClient.onmessage = (message) => {
+    wsClient.onmessage = async (message) => {
       console.log(`The server received: ${message['data']}`);
       var json = message['data']
       var obj = JSON.parse(json);
+      console.log(obj);
+      await HighScoreService.createHighScore(obj);
+      HighScoreService.getHighScore().then((value) =>{
+        console.log("VALUE: " + value);
+        wsServer.clients.forEach((client) => {
+          client.send(JSON.stringify(value));
+        });
+      })
       
-      console.log('abcde')
     }
   }
 )
-
-
-setInterval(() => {
-  wsServer.clients.forEach((client) => {
-    client.send(new Date().toTimeString());
-  });
-}, 1000);
 
 
 let dbURI = "mongodb://localhost/Gr14DualNBack";
