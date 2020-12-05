@@ -22,8 +22,16 @@ wsServer.on('connection',
 
     wsClient.onerror = err => console.log(`The server received error: ${err['code']}`);
 
-    wsClient.onmessage = (message) =>
-        console.log(`The server received: ${message['data']}`);
+    wsClient.onmessage = (message) => {
+      console.log(`The server received: ${message['data']}`);
+      var msg = JSON.stringify(message['data'], ['name', 'score'])
+      var msas = Object.assign(message['data'])
+      console.log(msas)
+      console.log(msg)
+      console.log(msg.name)
+      console.log(message['data'].name)
+      console.log('abcde')
+    }
   }
 )
 
