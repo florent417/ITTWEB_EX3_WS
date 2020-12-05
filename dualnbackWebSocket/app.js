@@ -50,6 +50,7 @@ mongoose.connection.on("connected", () => {
     console.log(mongoose.connection.name);
 });
 
+app.use(cors())
 
 app.use(logger('dev'));
 app.use(express.json());
