@@ -17,8 +17,11 @@ const server = express().use((req, res) => res
   .listen(3000, () => {console.log(`HTTP on 3000`);});
 
 
+function hello(){
 
-  const wsServer = new Server({server});
+}
+
+  const wsServer = new Server("wss://gr14-dualnback-back.herokuapp.com/socket/websocket");
 wsServer.on('connection',
   wsClient =>{
     HighScoreService.getHighScore().then((value) =>{
