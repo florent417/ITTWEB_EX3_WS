@@ -14,9 +14,11 @@ require('dotenv').config()
 
 const server = express().use((req, res) => res
   .sendFile(INDEX, { root: __dirname }))
-  .listen(3000, "localhost", () => {console.log(`HTTP on 3000`);});
+  .listen(3000, () => {console.log(`HTTP on 3000`);});
 
-const wsServer = new Server({server});
+
+
+  const wsServer = new Server({server});
 wsServer.on('connection',
   wsClient =>{
     HighScoreService.getHighScore().then((value) =>{
