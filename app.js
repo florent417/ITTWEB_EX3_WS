@@ -13,13 +13,8 @@ const HighScoreService = require("./services/highScoreService")
 require('dotenv').config()
 
 const server = express().use((req, res) => res
-  .sendFile(INDEX, { root: __dirname }))
-  .listen(3000, () => {console.log(`HTTP on 3000`);});
+  .listen(3000, () => {console.log(`HTTP on 3000`);}));
 
-
-function hello(){
-  
-}
 
   const wsServer = new Server({server});
 wsServer.on('connection',
