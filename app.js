@@ -10,44 +10,13 @@ var cors = require('cors')
 const INDEX = 'public/index.html';
 const app = express();
 const HighScoreService = require("./services/highScoreService")
-const socketIO = require('socket.io');
 
 require('dotenv').config()
 
 const server = express().use((req, res) => res
   .sendFile(INDEX, { root: __dirname }))
   .listen(3000, () => {console.log(`HTTP on 3000`);});
-
-
-  const io = socketIO({server});
-  io.on('connection', (socket) => {
-    HighScoreService.getHighScore().then((value) =>{
-      console.log("VALUE: " + value);
-      io.clients.forEach((client) => {
-        client.send(JSON.stringify(value));
-      });
-    })
-
-    socket.onerror = err => console.log(`The server received error: ${err['code']}`);
-
-    socket.onmessage = async (message) => {
-      console.log(`The server received: ${message['data']}`);
-      var json = message['data']
-      var obj = JSON.parse(json);
-      console.log(obj);
-      await HighScoreService.createHighScore(obj);
-      HighScoreService.getHighScore().then((value) =>{
-        console.log("VALUE: " + value);
-        io.clients.forEach((client) => {
-          client.send(JSON.stringify(value));
-        });
-      })
-      
-    }
-
-  })
-
-  /*
+  
   const wsServer = new Server({server});
 wsServer.on('connection',
   wsClient =>{
@@ -76,7 +45,7 @@ wsServer.on('connection',
     }
   }
 )
-*/
+
 
 
 let dbURI = "mongodb://localhost/Gr14DualNBack";
