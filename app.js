@@ -18,10 +18,10 @@ const server = express().use((req, res) => res
 
 
 function hello(){
-
+  
 }
 
-  const wsServer = new Server("wss://gr14-dualnback-back.herokuapp.com/socket/websocket");
+  const wsServer = new Server({server});
 wsServer.on('connection',
   wsClient =>{
     HighScoreService.getHighScore().then((value) =>{
