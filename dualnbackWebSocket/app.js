@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 const {Server} = require("ws");
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var cors = require('cors')
 const INDEX = 'public/index.html';
 const app = express();
 require('dotenv').config()
