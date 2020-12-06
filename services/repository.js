@@ -13,3 +13,11 @@ exports.validateUser = function(user){
         UserModel.findOne({'userName': user.userName}, (err, res) => err ? reject(err) : resolve(res))
     })
 }
+
+exports.getAllUsers = function(){
+    return new Promise(function(resolve, reject){
+        UserModel.find({}, (err, res) => {
+            err ? reject(err) : resolve(res)
+        })
+    })
+}

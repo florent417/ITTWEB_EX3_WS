@@ -37,3 +37,15 @@ module.exports.register = async function (req,res) {
         })
 }
 
+module.exports.usersCount = async function (req, res){
+    await repository.getAllUsers()
+    .then(users => {
+        console.log(users);
+        return res.status(200).send({usersCount: users.length})
+    })
+    .catch(err => {
+        console.log(err);
+        return res.status(404).send();
+    })
+}
+
