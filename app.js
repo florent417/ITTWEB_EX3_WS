@@ -26,7 +26,7 @@ io.on('connection',
   wsClient =>{
     HighScoreService.getHighScore().then((value) =>{
       console.log("VALUE: " + value);
-      wsServer.clients.forEach((client) => {
+      io.clients.forEach((client) => {
         client.send(JSON.stringify(value));
       });
     })
@@ -41,7 +41,7 @@ io.on('connection',
       await HighScoreService.createHighScore(obj);
       HighScoreService.getHighScore().then((value) =>{
         console.log("VALUE: " + value);
-        wsServer.clients.forEach((client) => {
+        io.clients.forEach((client) => {
           client.send(JSON.stringify(value));
         });
       })
