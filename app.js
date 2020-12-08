@@ -3,13 +3,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
-const {Server} = require("ws");
+//const {Server} = require("ws");
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var cors = require('cors')
 const INDEX = 'public/index.html';
 const app = express();
 const HighScoreService = require("./services/highScoreService")
+const socketIO = require('socket.io');
 
 require('dotenv').config()
 
@@ -17,8 +18,11 @@ const server = express().use((req, res) => res
   .sendFile(INDEX, { root: __dirname }))
   .listen(3000, () => {console.log(`HTTP on 3000`);});
   
-  const wsServer = new Server({server});
-wsServer.on('connection',
+  const io = new socketIO(server)
+
+  //const wsServer = new Server({server});
+  
+io.on('connection',
   wsClient =>{
     HighScoreService.getHighScore().then((value) =>{
       console.log("VALUE: " + value);
