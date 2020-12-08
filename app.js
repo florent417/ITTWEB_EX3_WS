@@ -16,9 +16,9 @@ require('dotenv').config()
 
 const server = express().use((req, res) => res
   .sendFile(INDEX, { root: __dirname }))
-  .listen(3000, () => {console.log(`HTTP on 3000`);});
+  .listen(3005, () => {console.log(`HTTP on 3000`);});
   
-  const io = new socketIO(server)
+  const io = socketIO({server})
 
   //const wsServer = new Server({server});
   
