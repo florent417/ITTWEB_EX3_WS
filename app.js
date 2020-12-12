@@ -18,12 +18,12 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors())
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
 
 
 const server = http.createServer(app)
@@ -67,17 +67,36 @@ io.on('connection',
 )
 */
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   console.log("New client connected");
 
-  socket.emit("FromAPI", "Hello")
+  console.log('init')
+
+
+  HighScoreService.getHighScore().then((value) =>{
+    socket.emit('Initialhighscore', value)})
+
+
+  socket.on("newhighscore", function(data) {
+    console.log('Recieved new highscore')
+    HighScoreService.createHighScore(data)
+    socket.emit("newhighscore", data)
+  })
+
+  
 
   socket.on("disconnect", () => {
     console.log("Client disconnected");
   });
 });
 
-
+async function getInitalHighScore(){
+  await HighScoreService.getHighScore().then(async (value) => {
+    console.log('qwdqwdqw')
+    console.log(value)
+    return await value
+  })
+}
 
 let dbURI = "mongodb://localhost/Gr14DualNBack";
 if (process.env.NODE_ENV === 'production') {

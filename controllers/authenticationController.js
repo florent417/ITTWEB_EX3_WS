@@ -7,7 +7,7 @@ module.exports.login = async function (req, res) {
     await repository.validateUser(req.body)
         .then(x => {
             // Add response
-            console.log(req.body.passwor)
+            console.log(req.body.password)
             console.log(x.password)
 
             if(req.body.password != x.password){
@@ -26,6 +26,7 @@ module.exports.login = async function (req, res) {
 }
 
 module.exports.register = async function (req,res) {
+    console.log("logging body: " + req.body);
     await repository.createUser(req.body)
         .then(x => {
             console.log('YEAH!')
