@@ -3,25 +3,39 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
-//const {Server} = require("ws");
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var cors = require('cors')
 const INDEX = 'public/index.html';
-const app = express();
 const HighScoreService = require("./services/highScoreService")
-const socketIO = require('socket.io');
+const socketIo = require('socket.io');
+const http = require('http')
 
 require('dotenv').config()
 
-const server = express().use((req, res) => res
-  .sendFile(INDEX, { root: __dirname }))
-  .listen(3005, () => {console.log(`HTTP on 3000`);});
-  
-  const io = socketIO({server})
+const app = express();
 
-  //const wsServer = new Server({server});
-  
+app.use(cors())
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+
+
+const server = http.createServer(app)
+
+const io = socketIo(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+  }
+})
+
+
+/*
 io.on('connection',
   wsClient =>{
     HighScoreService.getHighScore().then((value) =>{
@@ -49,6 +63,17 @@ io.on('connection',
     }
   }
 )
+*/
+
+io.on("connection", (socket) => {
+  console.log("New client connected");
+
+  socket.emit("FromAPI", "Hello")
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+  });
+});
 
 
 
@@ -68,17 +93,8 @@ mongoose.connection.on("connected", () => {
     console.log(mongoose.connection.name);
 });
 
-app.use(cors())
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 
 
-module.exports = app;
+
+server.listen(3000, () => console.log('3000'));
