@@ -13,6 +13,8 @@ const http = require('http')
 
 require('dotenv').config()
 
+const PORT = process.env.PORT || 3000;
+
 const app = express();
 
 app.use(cors())
@@ -97,4 +99,4 @@ mongoose.connection.on("connected", () => {
 
 
 
-server.listen(3000, () => console.log('3000'));
+server.listen(PORT, () => console.log(PORT));
